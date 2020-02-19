@@ -534,6 +534,10 @@ func (router *router) ProcessMessage(ctx context.Context, msg Message) error {
 
 	// we may have multiple subscribers for the topic
 	for _, sub := range subs {
+		if sub.opts.Queue != msg.Header()["Queue"] {
+			continue
+		}
+
 		// we may have multiple handlers per subscriber
 		for i := 0; i < len(sub.handlers); i++ {
 			// get the handler
