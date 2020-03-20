@@ -211,6 +211,7 @@ func (s *service) call(ctx context.Context, router *router, sending *sync.Mutex,
 		method:      req.msg.Method,
 		endpoint:    req.msg.Endpoint,
 		body:        req.msg.Body,
+		header:      req.msg.Header,
 	}
 
 	// only set if not nil
@@ -526,6 +527,11 @@ func (router *router) ProcessMessage(ctx context.Context, msg Message) (err erro
 
 	// we may have multiple subscribers for the topic
 	for _, sub := range subs {
+		// Nsq one subscriber had multiple queue, one queue bind to one connection, skip repeat subscriber.
+		if sub.opts.Queue != msg.Header()["Queue"] {
+			continue
+		}
+
 		// we may have multiple handlers per subscriber
 		for i := 0; i < len(sub.handlers); i++ {
 			// get the handler
