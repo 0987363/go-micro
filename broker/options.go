@@ -48,6 +48,22 @@ var (
 	registryKey = "github.com/micro/go-micro/registry"
 )
 
+// PublishContext set context
+func PublishContext(ctx context.Context) PublishOption {
+	return func(o *PublishOptions) {
+		o.Context = ctx
+	}
+}
+
+func NewPublishOptions(opts ...PublishOption) PublishOptions {
+	opt := PublishOptions{}
+	for _, o := range opts {
+		o(&opt)
+	}
+
+	return opt
+}
+
 func NewSubscribeOptions(opts ...SubscribeOption) SubscribeOptions {
 	opt := SubscribeOptions{
 		AutoAck: true,

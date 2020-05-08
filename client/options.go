@@ -249,6 +249,13 @@ func WithExchange(e string) PublishOption {
 	}
 }
 
+// WithContext sets the context to route a message through
+func WithContext(ctx context.Context) PublishOption {
+	return func(o *PublishOptions) {
+		o.Context = ctx
+	}
+}
+
 // WithAddress sets the remote addresses to use rather than using service discovery
 func WithAddress(a ...string) CallOption {
 	return func(o *CallOptions) {
